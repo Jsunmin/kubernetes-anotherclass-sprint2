@@ -5,7 +5,7 @@
 replicaCount: 2
 
 image:
-  repository: 1pro/api-tester:v1.0.0
+  repository: tjsals7825/api-tester:v1.0.0
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -72,6 +72,7 @@ resources:
     memory: "200Mi"
     cpu: "200m"
 
+# hpa 사용할지 말지
 autoscaling:
   enabled: false
   minReplicas: 1

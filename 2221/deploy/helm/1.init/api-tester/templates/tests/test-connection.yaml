@@ -12,4 +12,5 @@ spec:
       image: busybox
       command: ['wget']
       args: ['{{ include "api-tester.fullname" . }}:{{ .Values.service.port }}']
+      # busybox 로 이미지 만들고 내가 만들 서비스 포트에 wget 날려 테스트
   restartPolicy: Never

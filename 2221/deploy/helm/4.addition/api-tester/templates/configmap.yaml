@@ -6,3 +6,8 @@ metadata:
     {{- include "api-tester.labels" . | nindent 4 }}
 data:
   {{- toYaml .Values.configmap.data.properties | nindent 2 }}
+# {{- 바로 다음 값들을 왼쪽 맨 끝으로 붙임 | nindent ~ 앞에서부터 space 2개 추가  }}
+
+# {{ include "api-tester.fullname" . }}-properties 는 바로 변수 추가
+#  {{- include "api-tester.labels" . | nindent 4 }} 는 앞에 스페이스 4개 추가해 값 추가
+# 실제 코드상 인덴트는 편의상, 실제 yaml 에 맞추기 위해서 - & nindent 를 사용해야!
