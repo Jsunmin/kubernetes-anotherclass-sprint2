@@ -4,7 +4,8 @@ replicaCount: 1
 image:
   repository: 1pro/api-tester
   pullPolicy: Always
-  tag: 1.0.0
+  tag: 1.1.1 # argocd-image-updater.argoproj.io/jsm-api-tester.allow-tags=regexp:^1.1.1-[0-9]{6}.[0-9]{6}$ ~ 정규식에 맞춰 변경
+
 
 resources:
   limits:
