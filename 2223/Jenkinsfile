@@ -70,6 +70,10 @@ pipeline {
         stage('헬름 템플릿 확인') {
             steps {
                 // K8S 배포
+                // 헬름 변수 주입때 일반적으로 values-{stage}.yaml 파일을 사용
+                //  chart 내 리소스 yaml 은 values.yaml을 참조하는데, 명령어로 주입한 values-{stage}.yaml 파일이 있으면 추가로 values.yaml을 overWriting
+                //  다수 오버레이도 가능 : helm template my-release . -f values.yaml -f values-dev.yaml -f values-extra.yaml
+                // 그렇지만 이렇게 values.yaml보다 set 명령어로 주입한 값이 최우선 적용됨!
                 sh "helm template api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/api-tester" +
                    " -f ./${CLASS_NUM}/deploy/helm/api-tester/values-${params.PROFILE}.yaml -n anotherclass-222-${params.PROFILE}"
                 // --set replicaCount='3' --set port='80' --set profile='dev' --set nodeport='32223'

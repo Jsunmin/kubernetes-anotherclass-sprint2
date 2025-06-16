@@ -22,6 +22,7 @@ pipeline {
         GITHUB_URL = "https://github.com/${GITHUB_USERNAME}/kubernetes-anotherclass-sprint2.git"
 
         // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
+        // 날짜로 개발환경 롤백도 가능하도록 처리
         APP_VERSION = '1.0.1'
         BUILD_DATE = sh(script: "echo `date +%y%m%d.%H%M%S`", returnStdout: true).trim()
 
@@ -62,7 +63,7 @@ pipeline {
                 sh "cp ./build/libs/app-0.0.1-SNAPSHOT.jar ./${CLASS_NUM}/build/docker/app-0.0.1-SNAPSHOT.jar"
 
                 script{
-
+                    // 젠킨스 credentials 에서 세팅한 정보로 접속정보로 도커 로그인
                     // 도커 빌드 - [1] 중요 데이터 암호화 관리
                     withCredentials([usernamePassword(credentialsId: 'docker_password', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh "echo " + '${PASSWORD}' + " | docker login -u " + '${USERNAME}' + " --password-stdin"
@@ -78,7 +79,7 @@ pipeline {
                     sh "docker rmi ${DOCKERHUB_USERNAME}/api-tester:${TAG}"
                 }
             }
-
+            // 스테이지 종료후 항상 실행
             post {
                 always {
                     sh "docker logout"
@@ -86,9 +87,10 @@ pipeline {
             }
         }
 
-        // [4] 네임스페이스는 배포와 별도로 관리
-        stage('네임스페이스 생성') { // 배포시 apply로 Namespace 생성 or 배포와 별개로 미리 생성 (추후 삭제시 별도 삭제)
+        // [4] 네임스페이스는 배포와 별도로 관리 ~ 배포시 apply로 Namespace 생성 or 배포와 별개로 미리 생성 (추후 삭제시 별도 삭제)
+        stage('네임스페이스 생성') {
             steps {
+                // 젠킨스 credentials 에서 세팅한 정보로 접속정보로 k8s 세팅
                 // kubectl 명령 사용 - [1] 중요 데이터 암호화 관리
                 withCredentials([file(credentialsId: 'k8s_master_config', variable: 'KUBECONFIG')]) {
                     sh "kubectl apply -f ./${CLASS_NUM}/deploy/kubectl/namespace-${params.PROFILE}.yaml --kubeconfig " + '${KUBECONFIG}'
@@ -104,9 +106,10 @@ pipeline {
                             " -n anotherclass-222-${params.PROFILE} --install --kubeconfig " + '${KUBECONFIG}' +
 
                             // [5] Helm 부가기능
-                            " --wait --timeout=10m" +   // 최대 10분으로 설정
+                            " --wait --timeout=10m" +   // 최대 10분으로 설정 ~ 문제가 있어 파드가 계속 안뜨면 cicd 서버 리소스 고갈되기에..
 
                             // [2] 잦은 배포 - versioning 무의미, 계획된 배포 - versioning 필수
+                            // 위에서 세팅한 TAG를 동적으로 할당해 넣음
                             " --set image.tag=${TAG}" +
                             " --set image.repository=${DOCKERHUB_USERNAME}/api-tester"
                 }

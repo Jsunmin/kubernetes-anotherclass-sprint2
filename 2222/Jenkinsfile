@@ -80,7 +80,7 @@ pipeline {
 
         stage('커스터마이즈 템플릿 확인') {
             steps {
-                // K8S 배포
+                // K8S 배포 ~ 오버레이 경로를 지정
                 sh "kubectl kustomize ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/${params.PROFILE}"
             }
         }

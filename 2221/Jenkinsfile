@@ -81,6 +81,8 @@ pipeline {
             steps {
                 // K8S 배포
                 sh "helm template api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/4.addition/api-tester -n anotherclass-222 --create-namespace"
+                // helm template ~ 배포 전 yaml 파일을 출력 ~ 확인용
+                // --create-namespace 지정한 네임스페이스가 없으면 생성해서 (있으면 사용해서) 리소스 생성함
             }
         }
 
@@ -88,6 +90,8 @@ pipeline {
             steps {
                 input message: '배포 시작', ok: "Yes"
                 sh "helm upgrade api-tester-${CLASS_NUM} ./${CLASS_NUM}/deploy/helm/4.addition/api-tester -n anotherclass-222 --create-namespace --install"
+                // helm upgrade --install ~ 배포시 기존에 설치된 리소스가 있으면 업데이트, 없으면 새로 설치함 (helm install + helm upgrade)
+                //  kubectl apply -f 와 같은 효과
             }
         }
     }

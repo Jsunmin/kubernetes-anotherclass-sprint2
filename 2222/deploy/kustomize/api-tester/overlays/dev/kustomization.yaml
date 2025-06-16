@@ -1,10 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: anotherclass-222-dev
+# base kustomization.yaml 값 오버라이딩
 commonLabels:
   version: 2.0.0
+# base kustomization.yaml에서 선언한 배포 리소스 그대로 받아옴 
+#  base 폴더일 필요는 없고 이름 바꿀 수 있음
+#  kubectl kustomize ./${CLASS_NUM}/deploy/kustomize/api-tester/overlays/${params.PROFILE} ~ 여기서 오버레이 입력 받고
+#   해당 경로에서 resources 에서 base kustomization.yaml 을 참조해 덮어씀
 resources:
   - ../../base
+# 오버레이에서 base kustomization.yaml에 선언한 리소스에 추가로 적용할 패치 파일들 ~ dev 에 yaml 있더라도 오버레이 안할 수 있도록 필터 가능
 patches:
   - path: configmap.yaml
   - path: deployment-spec.yaml

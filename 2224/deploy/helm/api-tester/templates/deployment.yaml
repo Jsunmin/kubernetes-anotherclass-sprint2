@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       # annotations: // [5] Helm 부가기능 - Helm 배포 후 이미지 변경이 없는 경우 Pod 업그레이드가 안될 수 있음.
-      #   rollme: {{ randAlphaNum 5 | quote }} // 항상 새 배포를 위해 랜덤값 적용
+      #   rollme: {{ randAlphaNum 5 | quote }} // 항상 새 배포를 위해 랜덤값 적용 ~ latest 태그만 활용하는 개발환경에 활용 굿
       labels:
         {{- include "api-tester.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
