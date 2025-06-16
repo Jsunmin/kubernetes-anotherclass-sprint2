@@ -2,9 +2,9 @@
 replicaCount: 1
 
 image:
-  repository: 1pro/api-tester
+  repository: tjsals7825/api-tester
   pullPolicy: Always
-  tag: 1.0.0
+  tag: "git-250617.005140"
 
 resources:
   limits:
