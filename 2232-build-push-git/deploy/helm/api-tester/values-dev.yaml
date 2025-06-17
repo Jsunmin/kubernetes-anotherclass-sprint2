@@ -4,7 +4,7 @@ replicaCount: 1
 image:
   repository: tjsals7825/api-tester
   pullPolicy: Always
-  tag: "git-250617.005140"
+  tag: "git-250618.001844"
 
 resources:
   limits:
